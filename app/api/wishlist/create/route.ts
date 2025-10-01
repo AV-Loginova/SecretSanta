@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
     const { title, imageUrl, link, description, price, userId } =
       await req.json();
 
-    if (!title || !link || !userId) {
+    if (!title || !userId) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -21,12 +21,10 @@ export async function POST(req: NextRequest) {
     const item = await prisma.wishlistItem.create({
       data: {
         title,
-        imageUrl:
-          imageUrl ||
-          'https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp',
-        link,
-        description,
-        price,
+        imageUrl: imageUrl || '',
+        link: link || null,
+        description: description ?? null,
+        price: price ?? null,
         userId,
       },
     });

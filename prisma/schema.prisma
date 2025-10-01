@@ -23,7 +23,7 @@ model WishlistItem {
   id          Int      @id @default(autoincrement())
   title       String
   imageUrl    String
-  link        String
+  link        String?
   description String?
   price       String?
   user        User     @relation(fields: [userId], references: [id])

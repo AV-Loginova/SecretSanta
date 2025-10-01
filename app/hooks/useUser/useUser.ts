@@ -1,4 +1,3 @@
-// shared/api/users/useUser.ts
 import { useQuery } from '@tanstack/react-query';
 
 interface User {
