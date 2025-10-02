@@ -9,7 +9,7 @@ interface ModalProps {
 export const useModal = () => {
   const [modalProps, setModalProps] = useState<ModalProps>({});
   const [isOpen, setIsOpen] = useState(false);
-
+  e;
   const open = (content: React.ReactNode, header: string) => {
     setModalProps({ content, header });
     setIsOpen(true);
