@@ -71,7 +71,7 @@ const UserPage = () => {
       setUser({ ...user!, ...formData });
       setEditMode(false);
     } catch {
-      modal.open(<ErrorModal />);
+      modal.open(<ErrorModal />, '');
     }
   };
 
@@ -90,11 +90,12 @@ const UserPage = () => {
             modal.close();
             router.push('/admin/users');
           } catch {
-            modal.open(<ErrorModal />);
+            modal.open(<ErrorModal />, '');
           }
         }}
         handleClose={modal.close}
-      />
+      />,
+      ''
     );
   };
 
@@ -111,13 +112,14 @@ const UserPage = () => {
 
             modal.close();
 
-            modal.open(<SuccessModal />);
+            modal.open(<SuccessModal />, '');
           } catch {
-            modal.open(<ErrorModal />);
+            modal.open(<ErrorModal />, '');
           }
         }}
         handleClose={modal.close}
-      />
+      />,
+      ''
     );
   };
 
