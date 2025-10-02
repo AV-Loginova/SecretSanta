@@ -14,7 +14,6 @@ import { SuccessModal } from '@components/ModalInner/Success/Success';
 
 import { WishlistItemType } from './wishlist.types';
 import { ErrorModal } from '@components/ModalInner/Error';
-import { wishlistApi } from '@services/Wishlist/Wishlist.api';
 
 const WishlistPage: React.FC = () => {
   const { data: user, isLoading: userLoading } = useUser();
@@ -95,6 +94,7 @@ const WishlistPage: React.FC = () => {
 
       modal.open(<SuccessModal />, '');
     } catch (error) {
+      console.error(error);
       modal.open(<ErrorModal />, '');
     } finally {
       loader.close();
@@ -107,6 +107,7 @@ const WishlistPage: React.FC = () => {
     } else {
       loader.close();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLoading, loading]);
 
   return (

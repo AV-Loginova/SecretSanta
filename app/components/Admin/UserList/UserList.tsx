@@ -40,7 +40,8 @@ export const UserList = () => {
         text={`Вы собираетесь удалить ${selectedUserIds.length} пользователя(ей).`}
         handleDelete={handleDelete}
         handleClose={modal.close}
-      />
+      />,
+      ''
     );
   };
 
@@ -62,7 +63,7 @@ export const UserList = () => {
     } catch (err) {
       console.error(err);
 
-      modal.open(<ErrorModal />);
+      modal.open(<ErrorModal />, '');
     }
   };
 
@@ -73,19 +74,20 @@ export const UserList = () => {
           credentials: 'include',
         });
 
-        const data = await res;
+        const data = (await res) as User[];
 
         setUsers(data);
       } catch (err) {
         console.error(err);
 
-        modal.open(<ErrorModal />);
+        modal.open(<ErrorModal />, '');
       } finally {
         setLoading(false);
       }
     };
 
     fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {

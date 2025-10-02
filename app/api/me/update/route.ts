@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@lib/prisma/prisma';
+import { Prisma } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import path from 'path';
 
+import { prisma } from '@lib/prisma/prisma';
+
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
-// функция для получения текущего пользователя по JWT cookie
 async function getCurrentUser(req: Request) {
   const cookie = req.headers.get('cookie') || '';
   const match = cookie.match(/token=([^;]+)/);
@@ -17,7 +18,7 @@ async function getCurrentUser(req: Request) {
     const payload = jwt.verify(match[1], JWT_SECRET) as { id: number };
     const user = await prisma.user.findUnique({ where: { id: payload.id } });
     return user;
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -34,7 +35,7 @@ export async function PATCH(req: Request) {
     const password = formData.get('password') as string | null;
     const avatar = formData.get('avatar') as File | null;
 
-    const dataToUpdate: any = {};
+    const dataToUpdate: Prisma.UserUpdateInput = {};
     if (name) dataToUpdate.name = name;
     if (email) dataToUpdate.email = email;
     if (password) dataToUpdate.password = await bcrypt.hash(password, 10);
