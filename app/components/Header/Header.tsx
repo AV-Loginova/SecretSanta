@@ -7,7 +7,6 @@ import { HeaderProfile } from '@components/HeaderProfile';
 export const Header = () => {
   const { data: user, isLoading } = useUser();
   const isAdmin = user?.role === 'admin' || user?.role === 'super';
-  console.log(isAdmin);
 
   return (
     <header className="navbar absolute p-0">
