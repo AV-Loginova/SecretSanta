@@ -52,6 +52,7 @@ const WishlistCard = ({ item, onDelete, onEdit }: WishlistCardProps) => {
           </button>
         )}
         {formValues.imageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img src={formValues.imageUrl} alt={formValues.title} />
         ) : (
           <div className="w-96 h-58 bg-base-300"></div>
