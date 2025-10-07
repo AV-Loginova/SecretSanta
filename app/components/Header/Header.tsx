@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { useUser } from '@hooks/useUser/useUser';
 
-import { HeaderProfile } from '@components/HeaderProfile';
+import { HeaderProfile } from './components/HeaderProfile';
 
 export const Header = () => {
   const { data: user, isLoading } = useUser();

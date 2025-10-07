@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 import { useUser } from '@hooks/useUser/useUser';
@@ -8,14 +9,15 @@ import { useWishlist } from '@hooks/useWishlist/useWishlist';
 import { useModal } from '@hooks/useModal/useModal';
 import { useLoader } from '@hooks/useUser/useLoader/useLoader';
 
-import WishlistCard from '@components/WishlistCard/WishlistCard';
+import { WishlistCard } from '@components/WishlistCard/WishlistCard';
 import { WishListForm } from '@components/WishListFrom/WishlistForm';
-import { SuccessModal } from '@components/ModalInner/Success/Success';
-
-import { WishlistItemType } from './wishlist.types';
+import { SuccessModal } from '@components/ModalInner/Success';
 import { ErrorModal } from '@components/ModalInner/Error';
 
+import { WishlistItemType } from './wishlist.types';
+
 const WishlistPage: React.FC = () => {
+  const router = useRouter();
   const { data: user, isLoading: userLoading } = useUser();
   const { items, loading, createItem, deleteItem, updateItem } = useWishlist(
     Number(user?.id)
@@ -26,8 +28,16 @@ const WishlistPage: React.FC = () => {
 
   const { reset } = useForm<Partial<WishlistItemType>>();
 
+  useEffect(() => {
+    if (!userLoading && !user) {
+      router.push('/');
+    }
+  }, [user, userLoading, router]);
+
   const onSubmit: SubmitHandler<Partial<WishlistItemType>> = async (data) => {
     if (!user) {
+      router.push('/');
+
       return;
     }
 
@@ -56,6 +66,12 @@ const WishlistPage: React.FC = () => {
   };
 
   const handleDeleteItemButtonClick = async (id: number) => {
+    if (!user) {
+      router.push('/');
+
+      return;
+    }
+
     loader.open();
 
     try {
@@ -70,6 +86,12 @@ const WishlistPage: React.FC = () => {
   };
 
   const handleAddItemClick = () => {
+    if (!user) {
+      router.push('/');
+
+      return;
+    }
+
     modal.open(<WishListForm onSubmit={onSubmit} />, 'Заполни форму');
   };
 
@@ -78,6 +100,8 @@ const WishlistPage: React.FC = () => {
     data: Partial<WishlistItemType>
   ) => {
     if (!user) {
+      router.push('/');
+
       return;
     }
 
@@ -109,6 +133,10 @@ const WishlistPage: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLoading, loading]);
+
+  if (userLoading || !user) {
+    return null;
+  }
 
   return (
     <div className="p-10 mt-[4rem] bg-base-200 h-[calc(100vh-4rem)] overflow-auto">
