@@ -14,7 +14,7 @@ type FormValues = {
   imageUrl: string;
 };
 
-const WishlistCard = ({ item, onDelete, onEdit }: WishlistCardProps) => {
+export const WishlistCard = ({ item, onDelete, onEdit }: WishlistCardProps) => {
   const { id, title, description, price, link, imageUrl } = item;
   const [isEditing, setIsEditing] = useState(false);
 
@@ -153,5 +153,3 @@ const WishlistCard = ({ item, onDelete, onEdit }: WishlistCardProps) => {
     </div>
   );
 };
-
-export default WishlistCard;

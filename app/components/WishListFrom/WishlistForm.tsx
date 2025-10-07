@@ -1,12 +1,12 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
-import { Wishlist } from 'app/(pages)/wishlist/wishlist.types';
+import { WishlistItemType } from 'app/(pages)/wishlist/wishlist.types';
 import { WishlistFormProps } from './WishlistFrom.props';
 
 export const WishListForm = (props: WishlistFormProps) => {
   const { onSubmit } = props;
-  const { register, handleSubmit } = useForm<Wishlist>();
+  const { register, handleSubmit } = useForm<WishlistItemType>();
 
   return (
     <form

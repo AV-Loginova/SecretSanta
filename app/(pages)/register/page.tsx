@@ -47,7 +47,7 @@ const Page = () => {
         message = e.message;
       }
 
-      modal.open(<ErrorModal header="Ошибка регистрации" text={message} />);
+      modal.open(<ErrorModal header="Ошибка регистрации" text={message} />, '');
     } finally {
       loader.close();
     }

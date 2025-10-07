@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -11,6 +12,7 @@ export const HeaderProfile = () => {
   const { data: user } = useUser();
   const queryClient = useQueryClient();
   const loader = useLoader();
+  const router = useRouter();
 
   const handleLogout = async () => {
     try {
@@ -18,6 +20,7 @@ export const HeaderProfile = () => {
       await logoutUser();
 
       queryClient.invalidateQueries({ queryKey: ['user'] });
+      router.push('/');
     } catch (err) {
       console.error(err);
     } finally {
