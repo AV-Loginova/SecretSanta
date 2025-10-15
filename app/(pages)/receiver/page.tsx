@@ -63,7 +63,7 @@ const ReceiverPage = () => {
   return (
     <div className="w-full min-h-screen flex flex-col items-center lg:items-stretch p-8">
       <div className="lg:flex lg:justify-between text-center">
-        <div className="stats stats-vertical bg-white lg:stats-horizontal text-left shadow mb-8">
+        <div className="stats stats-vertical bg-base-100 lg:stats-horizontal text-left shadow mb-8">
           <div className="stat">
             <div className="stat-title">Имя получателя</div>
             <div className="stat-value text-primary">{receiver.name}</div>

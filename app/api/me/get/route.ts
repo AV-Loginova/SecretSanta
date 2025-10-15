@@ -26,6 +26,7 @@ export const GET = async (req: Request) => {
       email: user.email,
       avatarUrl: user.avatarUrl,
       role: user.role,
+      theme: user.theme || 'cupcake',
     });
   } catch {
     return NextResponse.json({ error: 'Invalid token' }, { status: 401 });

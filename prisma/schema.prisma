@@ -20,6 +20,9 @@ model User {
 
   giftsGiven    SecretSantaAssignment[] @relation("giver")
   giftsReceived SecretSantaAssignment[] @relation("receiver")
+
+  theme     String         @default("cupcake")
+
 }
 
 model WishlistItem {

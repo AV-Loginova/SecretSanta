@@ -25,20 +25,25 @@ const AdminPage = () => {
     } else {
       loader.close();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading]);
+  }, [isLoading, loader]);
 
-  if (!user || (user.role !== 'admin' && user.role !== 'super')) {
-    router.push('/');
+  // Навигация только внутри эффекта
+  useEffect(() => {
+    if (
+      !isLoading &&
+      (!user || (user.role !== 'admin' && user.role !== 'super'))
+    ) {
+      router.push('/');
+    }
+  }, [isLoading, user, router]);
 
-    return null;
-  }
+  // Пока не загружен пользователь — ничего не рендерим
+  if (isLoading || !user) return null;
 
   const handleAssignSanta = async () => {
     try {
       loader.open();
       await request('/api/admin/secret-santa/assign', { method: 'POST' });
-
       modal.open(<SuccessModal />, '');
     } catch (err) {
       console.error(err);
