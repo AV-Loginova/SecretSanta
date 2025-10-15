@@ -95,16 +95,16 @@ const Page = () => {
       await updateUser(formData);
       await refetch?.();
 
-      modal.open(<SuccessModal />);
+      modal.open(<SuccessModal />, '');
     } catch {
-      modal.open(<ErrorModal header="Ошибка обновления профиля" />);
+      modal.open(<ErrorModal header="Ошибка обновления профиля" />, '');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-full h-screen flex items-center justify-center flex-col mx-auto bg-base-200">
+    <div className="max-full h-screen flex items-center justify-center flex-col mx-auto">
       {user && (
         <div className="card bg-base-100 w-96 shadow-sm p-5">
           <figure>

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { WishlistCard } from '@components/WishlistCard/WishlistCard';
 import { request } from '@shared/api/request';
 import { Countdown } from '@components/Countdown/Countdown';
+import { useLoader } from '@hooks/useUser/useLoader/useLoader';
 
 type WishlistItem = {
   id: number;
@@ -26,17 +27,20 @@ type Receiver = {
 const ReceiverPage = () => {
   const [receiver, setReceiver] = useState<Receiver | null>(null);
   const [loading, setLoading] = useState(true);
+  const loader = useLoader();
 
   useEffect(() => {
     const fetchReceiver = async () => {
       try {
+        loader.open();
         const data = await request('/api/me/receiver-wishlist');
 
-        setReceiver(data.receiver || null);
+        setReceiver(data?.receiver || null);
       } catch (error) {
         console.error('Failed to fetch receiver:', error);
       } finally {
         setLoading(false);
+        loader.close();
       }
     };
 
@@ -44,11 +48,7 @@ const ReceiverPage = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-[80vh]">
-        <span className="loading loading-spinner loading-lg"></span>
-      </div>
-    );
+    return loader.render();
   }
 
   if (!receiver) {
@@ -61,7 +61,7 @@ const ReceiverPage = () => {
   }
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center lg:items-stretch p-8 bg-base-200">
+    <div className="w-full min-h-screen flex flex-col items-center lg:items-stretch p-8">
       <div className="lg:flex lg:justify-between text-center">
         <div className="stats stats-vertical bg-white lg:stats-horizontal text-left shadow mb-8">
           <div className="stat">

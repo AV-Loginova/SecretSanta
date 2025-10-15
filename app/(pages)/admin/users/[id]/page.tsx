@@ -13,11 +13,13 @@ import { ErrorModal } from '@components/ModalInner/Error';
 import { SuccessModal } from '@components/ModalInner/Success/Success';
 
 import { UserWithWishlist } from './UserPage.types';
+import { useLoader } from '@hooks/useUser/useLoader/useLoader';
 
 const UserPage = () => {
   const { id } = useParams();
   const router = useRouter();
   const modal = useModal();
+  const loader = useLoader();
 
   const [user, setUser] = useState<UserWithWishlist | null>(null);
   const [loading, setLoading] = useState(true);
@@ -65,6 +67,7 @@ const UserPage = () => {
 
   const handleSave = async () => {
     try {
+      loader.open();
       await request(`/api/admin/users/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -76,6 +79,8 @@ const UserPage = () => {
       setEditMode(false);
     } catch {
       modal.open(<ErrorModal />, '');
+    } finally {
+      loader.close();
     }
   };
 
@@ -85,6 +90,7 @@ const UserPage = () => {
         text={`Вы действительно хотите удалить пользователя ${user?.name}?`}
         handleDelete={async () => {
           try {
+            loader.open();
             await request(`/api/admin/users/delete`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -95,6 +101,8 @@ const UserPage = () => {
             router.push('/admin/users');
           } catch {
             modal.open(<ErrorModal />, '');
+          } finally {
+            loader.close();
           }
         }}
         handleClose={modal.close}
@@ -109,6 +117,7 @@ const UserPage = () => {
         text={`Вы действительно хотите сбросить пароль для пользователя ${user?.name}?`}
         handleDelete={async () => {
           try {
+            loader.open();
             await request(`/api/admin/users/${id}/reset-password`, {
               method: 'POST',
               credentials: 'include',
@@ -119,6 +128,8 @@ const UserPage = () => {
             modal.open(<SuccessModal />, '');
           } catch {
             modal.open(<ErrorModal />, '');
+          } finally {
+            loader.close();
           }
         }}
         handleClose={modal.close}
@@ -126,12 +137,11 @@ const UserPage = () => {
       ''
     );
   };
-
-  if (loading) return <p>Загрузка...</p>;
+  if (loading) return loader.render();
   if (!user) return <p>Пользователь не найден</p>;
 
   return (
-    <div className="w-full  mx-auto p-10 bg-base-200 shadow-md scroll-auto">
+    <div className="w-full mx-auto p-10 shadow-md scroll-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Профиль пользователя</h2>
         <div className="flex gap-2">

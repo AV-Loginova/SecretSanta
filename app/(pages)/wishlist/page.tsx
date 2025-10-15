@@ -139,7 +139,7 @@ const WishlistPage: React.FC = () => {
   }
 
   return (
-    <div className="p-10 bg-base-200 overflow-auto">
+    <div className="p-10 overflow-auto min-h-screen">
       <button
         onClick={handleAddItemClick}
         className="btn btn-secondary rounded-full mb-5"
