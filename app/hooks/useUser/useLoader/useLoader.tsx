@@ -13,7 +13,7 @@ export const useLoader = () => {
     }
 
     return ReactDOM.createPortal(
-      <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="fixed inset-0 z-200 flex items-center justify-center">
         <div className="absolute inset-0 bg-black/30"></div>
         <span className="loading loading-spinner text-secondary z-50 relative"></span>
       </div>,

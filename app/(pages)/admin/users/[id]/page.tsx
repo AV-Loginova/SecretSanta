@@ -131,7 +131,7 @@ const UserPage = () => {
   if (!user) return <p>Пользователь не найден</p>;
 
   return (
-    <div className="w-full  mx-auto p-10 bg-base-200 shadow-md mt-[4rem] scroll-auto">
+    <div className="w-full  mx-auto p-10 bg-base-200 shadow-md scroll-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Профиль пользователя</h2>
         <div className="flex gap-2">

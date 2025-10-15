@@ -139,26 +139,28 @@ const WishlistPage: React.FC = () => {
   }
 
   return (
-    <div className="p-10 mt-[4rem] bg-base-200 h-[calc(100vh-4rem)] overflow-auto">
+    <div className="p-10 bg-base-200 overflow-auto">
       <button
         onClick={handleAddItemClick}
         className="btn btn-secondary rounded-full mb-5"
       >
         Добавить новое желание
       </button>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {loading ? null : items.length > 0 ? (
-          items.map((item) => (
-            <WishlistCard
-              key={item.id}
-              item={item}
-              onDelete={handleDeleteItemButtonClick}
-              onEdit={handleEditItemButtonClick}
-            />
-          ))
-        ) : (
-          <p>Нет элементов в вишлисте</p>
-        )}
+      <div className="w-full max-w-7xl mx-auto">
+        <div className="flex flex-wrap lg:justify-start justify-center gap-6">
+          {loading ? null : items.length > 0 ? (
+            items.map((item) => (
+              <WishlistCard
+                key={item.id}
+                item={item}
+                onDelete={handleDeleteItemButtonClick}
+                onEdit={handleEditItemButtonClick}
+              />
+            ))
+          ) : (
+            <p>Нет элементов в вишлисте</p>
+          )}
+        </div>
       </div>
 
       {modal.render()}

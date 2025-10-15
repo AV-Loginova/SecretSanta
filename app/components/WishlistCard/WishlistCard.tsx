@@ -31,8 +31,10 @@ export const WishlistCard = ({ item, onDelete, onEdit }: WishlistCardProps) => {
   const formValues = watch();
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    onEdit(id, data);
-    setIsEditing(false);
+    if (onEdit) {
+      onEdit(id, data);
+      setIsEditing(false);
+    }
   };
 
   const handleCancel = () => {
@@ -43,7 +45,7 @@ export const WishlistCard = ({ item, onDelete, onEdit }: WishlistCardProps) => {
   return (
     <div className="card bg-base-100 w-96 shadow-sm">
       <figure className="max-h-58 relative">
-        {!isEditing && (
+        {!isEditing && onEdit && (
           <button
             className="btn btn-accent btn-sm rounded-full absolute right-2 top-2"
             onClick={() => setIsEditing(true)}
@@ -55,7 +57,7 @@ export const WishlistCard = ({ item, onDelete, onEdit }: WishlistCardProps) => {
           // eslint-disable-next-line @next/next/no-img-element
           <img src={formValues.imageUrl} alt={formValues.title} />
         ) : (
-          <div className="w-96 h-58 bg-base-300"></div>
+          <div className="w-full h-58 bg-base-300"></div>
         )}
       </figure>
 
@@ -140,12 +142,14 @@ export const WishlistCard = ({ item, onDelete, onEdit }: WishlistCardProps) => {
                   Посмотреть в магазине
                 </a>
               )}
-              <button
-                className="btn btn-error btn-sm rounded-full text-white"
-                onClick={() => onDelete(id)}
-              >
-                Удалить
-              </button>
+              {onDelete && (
+                <button
+                  className="btn btn-error btn-sm rounded-full text-white"
+                  onClick={() => onDelete(id)}
+                >
+                  Удалить
+                </button>
+              )}
             </div>
           </>
         )}
