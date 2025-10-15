@@ -9,7 +9,7 @@ export const Header = () => {
   const isAdmin = user?.role === 'admin' || user?.role === 'super';
 
   return (
-    <header className="navbar absolute p-0">
+    <header className="navbar z-100 p-0">
       <div className="flex navbar bg-base-100 shadow-sm">
         <div className="flex-1">
           <Link className="btn btn-ghost text-xl rounded-full" href={'/'}>

@@ -62,6 +62,9 @@ export const HeaderProfile = () => {
         <li>
           <Link href="/wishlist">Вишлист</Link>
         </li>
+        <li>
+          <Link href="/receiver">Мой санта</Link>
+        </li>
 
         <li>
           <button className="text-red-400" onClick={handleLogout}>
