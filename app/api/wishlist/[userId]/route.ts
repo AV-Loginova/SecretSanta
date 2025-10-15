@@ -6,7 +6,8 @@ interface Params {
 }
 
 export async function GET(req: NextRequest, context: { params: Params }) {
-  const { params } = context; // await не нужен, но context обязателен
+  const { params } = context;
+
   const userId = Number(params.userId);
 
   if (isNaN(userId)) {
@@ -14,6 +15,7 @@ export async function GET(req: NextRequest, context: { params: Params }) {
   }
 
   const userExists = await prisma.user.findUnique({ where: { id: userId } });
+
   if (!userExists) {
     return NextResponse.json({ error: 'User not found' }, { status: 404 });
   }
