@@ -7,6 +7,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const res = adminCheck(req);
+
   if (res) {
     return res;
   }
@@ -25,6 +26,17 @@ export async function GET(
       role: true,
       createdAt: true,
       avatarUrl: true,
+      wishlist: {
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          link: true,
+          price: true,
+          createdAt: true,
+          imageUrl: true,
+        },
+      },
     },
   });
 
@@ -33,4 +45,39 @@ export async function GET(
   }
 
   return NextResponse.json(user);
+}
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const res = adminCheck(req);
+
+  if (res) {
+    return res;
+  }
+
+  const userId = Number(params.id);
+
+  if (isNaN(userId)) {
+    return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+  }
+
+  const body = await req.json();
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: body,
+    });
+
+    return NextResponse.json(updatedUser);
+  } catch (err) {
+    console.error(err);
+
+    return NextResponse.json(
+      { error: 'Ошибка при обновлении пользователя' },
+      { status: 500 }
+    );
+  }
 }

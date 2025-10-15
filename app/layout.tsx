@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="ru" data-theme="cupcake">
       <QueryClientProvider client={queryClient}>
-        <body className="flex flex-col min-h-screen bg-base-100 text-base-content overflow-hidden">
+        <body className="flex flex-col min-h-screen bg-base-100 text-base-content overflow-auto">
           <Header />
           <main className="grow">{children}</main>
         </body>

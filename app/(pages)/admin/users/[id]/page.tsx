@@ -3,19 +3,23 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter, useParams } from 'next/navigation';
+
 import { request } from '@shared/api/request';
-import { User } from '@prisma/client';
+
 import { useModal } from '@hooks/useModal/useModal';
+
 import { ConfirmModal } from '@components/ModalInner/Confirm/Confirm';
 import { ErrorModal } from '@components/ModalInner/Error';
 import { SuccessModal } from '@components/ModalInner/Success/Success';
+
+import { UserWithWishlist } from './UserPage.types';
 
 const UserPage = () => {
   const { id } = useParams();
   const router = useRouter();
   const modal = useModal();
 
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserWithWishlist | null>(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
 
@@ -29,7 +33,7 @@ const UserPage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await request<User>(`/api/admin/users/${id}`, {
+        const res = await request<UserWithWishlist>(`/api/admin/users/${id}`, {
           credentials: 'include',
         });
 
@@ -62,7 +66,7 @@ const UserPage = () => {
   const handleSave = async () => {
     try {
       await request(`/api/admin/users/${id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
         credentials: 'include',
@@ -127,7 +131,7 @@ const UserPage = () => {
   if (!user) return <p>Пользователь не найден</p>;
 
   return (
-    <div className="w-full h-screen mx-auto p-10 bg-base-200 shadow-md mt-[4rem]">
+    <div className="w-full  mx-auto p-10 bg-base-200 shadow-md mt-[4rem] scroll-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Профиль пользователя</h2>
         <div className="flex gap-2">
@@ -172,64 +176,37 @@ const UserPage = () => {
       </div>
 
       <div className="flex flex-col gap-4">
-        <div className="form-control w-full">
-          <label className="label">
-            <span className="label-text">Имя</span>
-          </label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className={`input input-bordered w-full ${!editMode && 'bg-base-200'}`}
-            disabled={!editMode}
-          />
-        </div>
-
-        <div className="form-control w-full">
-          <label className="label">
-            <span className="label-text">Email</span>
-          </label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className={`input input-bordered w-full ${!editMode && 'bg-base-200'}`}
-            disabled={!editMode}
-          />
-        </div>
-
-        <div className="form-control w-full">
-          <label className="label">
-            <span className="label-text">Роль</span>
-          </label>
-          <select
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            className={`select select-bordered w-full ${!editMode && 'bg-base-200'}`}
-            disabled={!editMode}
-          >
-            <option value="user">Пользователь</option>
-            <option value="admin">Админ</option>
-            <option value="super">Супер админ</option>
-          </select>
-        </div>
-
-        <div className="form-control w-full">
-          <label className="label">
-            <span className="label-text">URL аватара</span>
-          </label>
-          <input
-            type="text"
-            name="avatarUrl"
-            value={formData.avatarUrl}
-            onChange={handleChange}
-            className={`input input-bordered w-full ${!editMode && 'bg-base-200'}`}
-            disabled={!editMode}
-          />
-        </div>
+        {['name', 'email', 'role', 'avatarUrl'].map((field) => (
+          <div className="form-control w-full" key={field}>
+            <label className="label">
+              <span className="label-text">
+                {field === 'avatarUrl' ? 'URL аватара' : field}
+              </span>
+            </label>
+            {field === 'role' ? (
+              <select
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                className={`select select-bordered w-full ${!editMode && 'bg-base-200'}`}
+                disabled={!editMode}
+              >
+                <option value="user">Пользователь</option>
+                <option value="admin">Админ</option>
+                <option value="super">Супер админ</option>
+              </select>
+            ) : (
+              <input
+                type={field === 'email' ? 'email' : 'text'}
+                name={field}
+                value={formData[field as keyof typeof formData]}
+                onChange={handleChange}
+                className={`input input-bordered w-full ${!editMode && 'bg-base-200'}`}
+                disabled={!editMode}
+              />
+            )}
+          </div>
+        ))}
 
         {editMode && (
           <button
@@ -238,6 +215,48 @@ const UserPage = () => {
           >
             Сохранить изменения
           </button>
+        )}
+      </div>
+
+      <div className="mt-10">
+        <h3 className="text-xl font-bold mb-4">Wishlist</h3>
+        {user.wishlist.length === 0 ? (
+          <p>Подарки отсутствуют</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="table w-full">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Название</th>
+                  <th>Описание</th>
+                  <th>Ссылка</th>
+                  <th>Цена</th>
+                  <th>Дата добавления</th>
+                </tr>
+              </thead>
+              <tbody>
+                {user.wishlist.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.id}</td>
+                    <td>{item.title}</td>
+                    <td>{item.description || '-'}</td>
+                    <td>
+                      {item.link ? (
+                        <a href={item.link} target="_blank" rel="noreferrer">
+                          Ссылка
+                        </a>
+                      ) : (
+                        '-'
+                      )}
+                    </td>
+                    <td>{item.price || '-'}</td>
+                    <td>{new Date(item.createdAt).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 
