@@ -29,7 +29,7 @@ export function adminCheck(req: NextRequest) {
       return NextResponse.redirect(new URL('/', req.url));
     }
 
-    return null; // всё ок
+    return null;
   } catch {
     if (isApiRequest) {
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 });

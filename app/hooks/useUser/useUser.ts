@@ -6,6 +6,7 @@ interface User {
   email: string;
   avatarUrl?: string | null;
   role: string;
+  theme: string | null;
 }
 
 export const useUser = () => {

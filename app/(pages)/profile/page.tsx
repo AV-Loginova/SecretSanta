@@ -131,6 +131,7 @@ const Page = () => {
             </label>
           </figure>
           <div className="avatar mb-6"></div>
+
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4"

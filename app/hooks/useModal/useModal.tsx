@@ -44,7 +44,7 @@ export const useModal = () => {
       <div className="fixed inset-0 z-100 flex items-center justify-center">
         <div className="absolute inset-0 bg-black/50" onClick={close} />
 
-        <div className="relative z-50 bg-white rounded-lg shadow-lg p-6 w-96">
+        <div className="relative z-50 bg-base-100 rounded-lg shadow-lg p-6 w-96">
           <div className="mt-0 flex right-5 top-0 justify-between items-center mb-5">
             <h2 className="font-bold text-lg">{modalProps.header || ''}</h2>
             <button className="btn rounded-full" onClick={close}>

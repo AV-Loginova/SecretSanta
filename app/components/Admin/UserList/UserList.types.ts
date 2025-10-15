@@ -5,4 +5,5 @@ export interface User {
   role: string;
   createdAt: string;
   avatarUrl?: string;
+  theme: string;
 }

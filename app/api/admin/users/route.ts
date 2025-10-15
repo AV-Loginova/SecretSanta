@@ -17,6 +17,7 @@ export async function GET(req: NextRequest) {
       role: true,
       createdAt: true,
       avatarUrl: true,
+      theme: true,
     },
     orderBy: { createdAt: 'desc' },
   });

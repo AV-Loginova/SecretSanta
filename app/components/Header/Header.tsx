@@ -1,12 +1,44 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { IoSunny, IoMoon } from 'react-icons/io5';
 
 import { useUser } from '@hooks/useUser/useUser';
-
 import { HeaderProfile } from './components/HeaderProfile';
 
 export const Header = () => {
   const { data: user, isLoading } = useUser();
   const isAdmin = user?.role === 'admin' || user?.role === 'super';
+
+  const [theme, setTheme] = useState('cupcake');
+
+  useEffect(() => {
+    const storedTheme =
+      user?.theme || localStorage.getItem('theme') || 'cupcake';
+    setTheme(storedTheme);
+    document.documentElement.setAttribute('data-theme', storedTheme);
+  }, [user]);
+
+  const toggleTheme = async () => {
+    const newTheme = theme === 'cupcake' ? 'dracula' : 'cupcake';
+    setTheme(newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+
+    if (user) {
+      try {
+        await fetch('/api/me/theme', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ theme: newTheme }),
+        });
+      } catch (err) {
+        console.error('Failed to save theme:', err);
+      }
+    }
+  };
 
   return (
     <header className="navbar z-100 p-0">
@@ -39,7 +71,18 @@ export const Header = () => {
                   Админ панель
                 </Link>
               )}
+
               <HeaderProfile />
+
+              <label className="swap swap-rotate">
+                <input
+                  type="checkbox"
+                  checked={theme === 'dracula'}
+                  onChange={toggleTheme}
+                />
+                <IoSunny className="swap-on text-xl" />
+                <IoMoon className="swap-off text-xl" />
+              </label>
             </div>
           )}
         </div>

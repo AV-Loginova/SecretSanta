@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { Header } from '@components/Header';
+import ThemeWrapper from '@components/ThemeWrapper/ThemeWrapper';
 
 import './globals.css';
 
@@ -15,13 +15,12 @@ export default function RootLayout({
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <html lang="ru" data-theme="cupcake">
-      <QueryClientProvider client={queryClient}>
-        <body className="flex flex-col min-h-screen bg-base-200 text-base-content overflow-auto">
-          <Header />
-          <main className="grow">{children}</main>
-        </body>
-      </QueryClientProvider>
+    <html lang="ru">
+      <body>
+        <QueryClientProvider client={queryClient}>
+          <ThemeWrapper>{children}</ThemeWrapper>
+        </QueryClientProvider>
+      </body>
     </html>
   );
 }
