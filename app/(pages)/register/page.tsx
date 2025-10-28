@@ -59,7 +59,7 @@ const Page = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="h-screen flex items-center justify-center"
       >
-        <fieldset className="fieldset bg-white border-base-300 rounded-box w-xs border p-4">
+        <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-xs border p-4">
           <legend className="fieldset-legend">Регистрация</legend>
 
           <label className="label">Email</label>

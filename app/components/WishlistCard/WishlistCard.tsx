@@ -121,7 +121,7 @@ export const WishlistCard = ({ item, onDelete, onEdit }: WishlistCardProps) => {
         ) : (
           <>
             <h2
-              className="card-title h-[30px] overflow-hidden text-ellipsis break-words"
+              className="card-title h-[30px] mb-3 text-ellipsis break-words"
               title={title}
             >
               {title}

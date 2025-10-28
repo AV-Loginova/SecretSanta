@@ -66,7 +66,7 @@ const ReceiverPage = () => {
         <div className="stats stats-vertical bg-base-100 lg:stats-horizontal text-left shadow mb-8">
           <div className="stat">
             <div className="stat-title">Имя получателя</div>
-            <div className="stat-value text-primary">{receiver.name}</div>
+            <div className="stat-value text-secondary">{receiver.name}</div>
             <div className="stat-desc">{receiver.email}</div>
           </div>
 
@@ -77,7 +77,7 @@ const ReceiverPage = () => {
           </div>
 
           <div className="stat">
-            <div className="stat-title">Аватар</div>
+            <div className="stat-desc mb-2">Будущий счастливчик</div>
             <div className="stat-value">
               {receiver.avatarUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -90,7 +90,6 @@ const ReceiverPage = () => {
                 '😶'
               )}
             </div>
-            <div className="stat-desc">Будущий счастливчик</div>
           </div>
         </div>
         <Countdown targetDate="2025-12-31T00:00:00" />
