@@ -74,7 +74,7 @@ export const Header = () => {
 
               <HeaderProfile />
 
-              <label className="swap swap-rotate">
+              <label className="swap swap-rotate mr-3">
                 <input
                   type="checkbox"
                   checked={theme === 'dracula'}

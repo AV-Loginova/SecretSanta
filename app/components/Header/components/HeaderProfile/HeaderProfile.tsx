@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useUser } from '@hooks/useUser/useUser';
@@ -13,6 +13,10 @@ export const HeaderProfile = () => {
   const queryClient = useQueryClient();
   const loader = useLoader();
   const router = useRouter();
+
+  const [open, setOpen] = useState(false);
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = async () => {
     try {
@@ -28,14 +32,28 @@ export const HeaderProfile = () => {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="dropdown dropdown-end mr-5">
+    <div className="relative mr-3" ref={dropdownRef}>
       <div
-        tabIndex={0}
-        role="button"
         className="btn btn-ghost btn-circle avatar"
+        onClick={() => setOpen(!open)}
       >
-        <div className=" rounded-full ">
+        <div className="rounded-full">
           {user?.avatarUrl ? (
             <Image
               src={user.avatarUrl}
@@ -45,33 +63,44 @@ export const HeaderProfile = () => {
               className="rounded-full"
             />
           ) : (
-            <span className=" bg-gray-300 rounded-full flex items-center justify-center  w-9 h-9">
+            <span className="bg-gray-300 rounded-full flex items-center justify-center w-9 h-9">
               {user?.name?.[0].toUpperCase() || 'U'}
             </span>
           )}
         </div>
       </div>
 
-      <ul
-        tabIndex={0}
-        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-4 w-52 p-2 shadow"
-      >
-        <li>
-          <Link href="/profile">Профиль</Link>
-        </li>
-        <li>
-          <Link href="/wishlist">Вишлист</Link>
-        </li>
-        <li>
-          <Link href="/receiver">Мой санта</Link>
-        </li>
+      {open && (
+        <ul className="menu menu-sm absolute right-0 bg-base-100 rounded-box mt-2 w-52 p-2 shadow z-50">
+          <li>
+            <Link href="/profile" onClick={() => setOpen(false)}>
+              Профиль
+            </Link>
+          </li>
+          <li>
+            <Link href="/wishlist" onClick={() => setOpen(false)}>
+              Вишлист
+            </Link>
+          </li>
+          <li>
+            <Link href="/receiver" onClick={() => setOpen(false)}>
+              Мой санта
+            </Link>
+          </li>
+          <li>
+            <button
+              className="text-red-400"
+              onClick={() => {
+                handleLogout();
+                setOpen(false);
+              }}
+            >
+              Выйти
+            </button>
+          </li>
+        </ul>
+      )}
 
-        <li>
-          <button className="text-red-400" onClick={handleLogout}>
-            Выйти
-          </button>
-        </li>
-      </ul>
       {loader.render()}
     </div>
   );
