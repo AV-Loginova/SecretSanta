@@ -1,4 +1,4 @@
-import { ApiError, request } from '@shared/api/request';
+import { ApiError, request } from '@shared/utils/request';
 
 describe('request', () => {
   beforeEach(() => {

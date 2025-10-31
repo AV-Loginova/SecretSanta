@@ -2,11 +2,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, useRef } from 'react';
+
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useUser } from '@hooks/useUser/useUser';
-import { logoutUser } from '@shared/api/users/logout';
 import { useLoader } from '@hooks/useUser/useLoader/useLoader';
+
+import { UserApi } from '@services/User/User.api';
 
 export const HeaderProfile = () => {
   const { data: user } = useUser();
@@ -21,7 +23,7 @@ export const HeaderProfile = () => {
   const handleLogout = async () => {
     try {
       loader.open();
-      await logoutUser();
+      await UserApi.logout();
 
       queryClient.invalidateQueries({ queryKey: ['user'] });
       router.push('/');
@@ -41,7 +43,9 @@ export const HeaderProfile = () => {
         setOpen(false);
       }
     };
+
     document.addEventListener('mousedown', handleClickOutside);
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };

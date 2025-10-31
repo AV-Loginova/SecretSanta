@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { request } from '@shared/api/request';
+import { request } from '@shared/utils/request';
 
 import { useUser } from '@hooks/useUser/useUser';
 import { useModal } from '@hooks/useModal/useModal';
@@ -27,7 +27,6 @@ const AdminPage = () => {
     }
   }, [isLoading, loader]);
 
-  // Навигация только внутри эффекта
   useEffect(() => {
     if (
       !isLoading &&
@@ -37,16 +36,19 @@ const AdminPage = () => {
     }
   }, [isLoading, user, router]);
 
-  // Пока не загружен пользователь — ничего не рендерим
-  if (isLoading || !user) return null;
+  if (isLoading || !user) {
+    return null;
+  }
 
   const handleAssignSanta = async () => {
     try {
       loader.open();
+
       await request('/api/admin/secret-santa/assign', { method: 'POST' });
       modal.open(<SuccessModal />, '');
     } catch (err) {
       console.error(err);
+
       modal.open(<ErrorModal />, '');
     } finally {
       loader.close();

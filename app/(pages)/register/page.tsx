@@ -4,13 +4,15 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 
-import { registerUser } from '@shared/api/users/register';
+import { UserApi } from '@services/User/User.api';
 
 import { useUser } from '@hooks/useUser/useUser';
 import { useLoader } from '@hooks/useUser/useLoader/useLoader';
 import { useModal } from '@hooks/useModal/useModal';
+
 import { ErrorModal } from '@components/ModalInner/Error';
 
+//todo types
 export interface RegisterFormData {
   name: string;
   email: string;
@@ -36,7 +38,7 @@ const Page = () => {
       loader.open();
       const { ...payload } = data;
 
-      await registerUser(payload);
+      await UserApi.create(payload);
       await refetchUser?.();
 
       router.push('/');

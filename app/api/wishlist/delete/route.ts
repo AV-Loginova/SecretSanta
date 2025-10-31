@@ -4,8 +4,9 @@ import { prisma } from '@lib/prisma/prisma';
 export async function POST(req: NextRequest) {
   const { id } = await req.json();
 
-  if (!id)
+  if (!id) {
     return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+  }
 
   await prisma.wishlistItem.delete({ where: { id } });
 

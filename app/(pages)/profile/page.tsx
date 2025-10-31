@@ -5,15 +5,16 @@ import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+import { UserApi } from '@services/User/User.api';
+
 import { useUser } from '@hooks/useUser/useUser';
 import { useLoader } from '@hooks/useUser/useLoader/useLoader';
 import { useModal } from '@hooks/useModal/useModal';
 
-import { updateUser } from '@shared/api/users/update/update';
-
 import { ErrorModal } from '@components/ModalInner/Error';
 import { SuccessModal } from '@components/ModalInner/Success/Success';
 
+//todo types
 interface ProfileFormData {
   name: string | null;
   email: string;
@@ -76,23 +77,20 @@ const Page = () => {
   }, [avatar, user]);
 
   const onSubmit = async (data: ProfileFormData) => {
+    const { name, email, password, avatar } = data;
+
     setLoading(true);
 
+    const payload = {
+      name: name,
+      email: email,
+      password: password,
+      avatar: avatar?.[0] || null,
+    };
+
     try {
-      const formData = new FormData();
-
-      formData.append('name', data.name || '');
-      formData.append('email', data.email);
-
-      if (data.password) {
-        formData.append('password', data.password);
-      }
-
-      if (data.avatar && data.avatar[0]) {
-        formData.append('avatar', data.avatar[0]);
-      }
-
-      await updateUser(formData);
+      //todo types
+      await UserApi.update(payload);
       await refetch?.();
 
       modal.open(<SuccessModal />, '');

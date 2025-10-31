@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import React from 'react';
 
+//todo types
 interface User {
   id: number;
   name: string;

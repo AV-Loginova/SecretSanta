@@ -11,6 +11,7 @@ export const PATCH = async (req: Request) => {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { theme } = await req.json();
+
   if (!theme)
     return NextResponse.json({ error: 'No theme provided' }, { status: 400 });
 
