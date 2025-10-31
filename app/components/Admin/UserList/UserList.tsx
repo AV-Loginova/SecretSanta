@@ -7,10 +7,11 @@ import { useRouter } from 'next/navigation';
 import { User } from '@prisma/client';
 
 import { ConfirmModal } from '@components/ModalInner/Confirm/Confirm';
+import { ErrorModal } from '@components/ModalInner/Error';
 
 import { useModal } from '@hooks/useModal/useModal';
-import { request } from '@shared/api/request';
-import { ErrorModal } from '@components/ModalInner/Error';
+
+import { UserApi } from '@services/User/User.api';
 
 export const UserList = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -47,12 +48,7 @@ export const UserList = () => {
 
   const handleDelete = async () => {
     try {
-      await request('/api/admin/users/delete', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ids: selectedUserIds }),
-        credentials: 'include',
-      });
+      UserApi.delete(selectedUserIds);
 
       setUsers((prev) =>
         prev.filter((user) => !selectedUserIds.includes(user.id))
@@ -70,11 +66,7 @@ export const UserList = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await request('/api/admin/users', {
-          credentials: 'include',
-        });
-
-        const data = (await res) as User[];
+        const data = await UserApi.getAll();
 
         setUsers(data);
       } catch (err) {

@@ -14,10 +14,13 @@ const ThemeWrapper = ({ children }: { children: React.ReactNode }) => {
     setTheme(userTheme);
   }, [user]);
 
-  if (!theme) return null; // пока тема не определена, ничего не рендерим
+  if (!theme) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-base-200 text-base-content overflow-auto">
+      {/* todo */}
       <Header setTheme={setTheme} theme={theme} />
       <main className="grow">{children}</main>
     </div>

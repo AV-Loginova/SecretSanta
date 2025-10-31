@@ -3,10 +3,13 @@
 import React, { useEffect, useState } from 'react';
 
 import { WishlistCard } from '@components/WishlistCard/WishlistCard';
-import { request } from '@shared/api/request';
 import { Countdown } from '@components/Countdown/Countdown';
+
 import { useLoader } from '@hooks/useUser/useLoader/useLoader';
 
+import { UserApi } from '@services/User/User.api';
+
+//todo types
 type WishlistItem = {
   id: number;
   title: string;
@@ -33,8 +36,9 @@ const ReceiverPage = () => {
     const fetchReceiver = async () => {
       try {
         loader.open();
-        const data = await request('/api/me/receiver-wishlist');
+        const data = UserApi.getReceiver();
 
+        //todo types
         setReceiver(data?.receiver || null);
       } catch (error) {
         console.error('Failed to fetch receiver:', error);

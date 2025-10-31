@@ -1,5 +1,6 @@
 import { WishlistItem } from '@prisma/client';
-import { request } from '@shared/api/request';
+
+import { request } from '@shared/utils/request';
 
 export const wishlistApi = {
   getByUser(userId: string) {

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { IoSunny, IoMoon } from 'react-icons/io5';
 
 import { useUser } from '@hooks/useUser/useUser';
+
 import { HeaderProfile } from './components/HeaderProfile';
 
 export const Header = () => {

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 
+//todo types
 type CountdownProps = {
   targetDate: string | Date;
 };

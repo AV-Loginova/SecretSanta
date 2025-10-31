@@ -106,6 +106,7 @@ const WishlistPage: React.FC = () => {
     }
 
     loader.open();
+
     try {
       await updateItem(id, {
         userId: Number(user.id),
@@ -119,6 +120,7 @@ const WishlistPage: React.FC = () => {
       modal.open(<SuccessModal />, '');
     } catch (error) {
       console.error(error);
+
       modal.open(<ErrorModal />, '');
     } finally {
       loader.close();

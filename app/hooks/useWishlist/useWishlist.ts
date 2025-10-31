@@ -16,6 +16,7 @@ export function useWishlist(userId?: number) {
         setItems(data);
       } catch (err) {
         console.error('Ошибка загрузки вишлиста:', err);
+
         setItems([]);
       } finally {
         setLoading(false);
@@ -28,11 +29,13 @@ export function useWishlist(userId?: number) {
   ) => {
     const newItem = await wishlistApi.create(item);
     setItems((prev) => [newItem, ...prev]);
+
     return newItem;
   };
 
   const deleteItem = async (id: number) => {
     await wishlistApi.delete(id);
+
     setItems((prev) => prev.filter((i) => i.id !== id));
   };
 

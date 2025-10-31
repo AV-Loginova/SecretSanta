@@ -3,12 +3,16 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { loginUser } from '@shared/api/users/login';
+
 import { useUser } from '@hooks/useUser/useUser';
 import { useLoader } from '@hooks/useUser/useLoader/useLoader';
 import { useModal } from '@hooks/useModal/useModal';
+
 import { ErrorModal } from '@components/ModalInner/Error';
 
+import { UserApi } from '@services/User/User.api';
+
+//todo types
 export interface LoginFormData {
   email: string;
   password: string;
@@ -30,7 +34,7 @@ const Page = () => {
     try {
       loader.open();
 
-      await loginUser(data);
+      await UserApi.login(data);
       await refetchUser?.();
 
       router.push('/');
@@ -41,7 +45,7 @@ const Page = () => {
         message = e.message;
       }
 
-      modal.open(<ErrorModal header="Ошибка входа" text={message} />);
+      modal.open(<ErrorModal header="Ошибка входа" text={message} />, '');
     } finally {
       loader.close();
     }

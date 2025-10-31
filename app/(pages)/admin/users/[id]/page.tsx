@@ -4,16 +4,16 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter, useParams } from 'next/navigation';
 
-import { request } from '@shared/api/request';
+import { UserApi } from '@services/User/User.api';
 
 import { useModal } from '@hooks/useModal/useModal';
+import { useLoader } from '@hooks/useUser/useLoader/useLoader';
 
 import { ConfirmModal } from '@components/ModalInner/Confirm/Confirm';
 import { ErrorModal } from '@components/ModalInner/Error';
 import { SuccessModal } from '@components/ModalInner/Success/Success';
 
 import { UserWithWishlist } from './UserPage.types';
-import { useLoader } from '@hooks/useUser/useLoader/useLoader';
 
 const UserPage = () => {
   const { id } = useParams();
@@ -35,10 +35,8 @@ const UserPage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await request<UserWithWishlist>(`/api/admin/users/${id}`, {
-          credentials: 'include',
-        });
-
+        const res = await UserApi.getById(id);
+        //todo types
         setUser(res);
 
         setFormData({
@@ -49,6 +47,7 @@ const UserPage = () => {
         });
       } catch (err) {
         console.error(err);
+
         router.push('/admin');
       } finally {
         setLoading(false);
@@ -68,12 +67,10 @@ const UserPage = () => {
   const handleSave = async () => {
     try {
       loader.open();
-      await request(`/api/admin/users/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-        credentials: 'include',
-      });
+
+      if (user) {
+        await UserApi.updateByAdmin(user.id, formData);
+      }
 
       setUser({ ...user!, ...formData });
       setEditMode(false);
@@ -91,12 +88,10 @@ const UserPage = () => {
         handleDelete={async () => {
           try {
             loader.open();
-            await request(`/api/admin/users/delete`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ ids: [user?.id] }),
-              credentials: 'include',
-            });
+
+            //todo types
+            UserApi.delete(user?.id);
+
             modal.close();
             router.push('/admin/users');
           } catch {
@@ -118,10 +113,8 @@ const UserPage = () => {
         handleDelete={async () => {
           try {
             loader.open();
-            await request(`/api/admin/users/${id}/reset-password`, {
-              method: 'POST',
-              credentials: 'include',
-            });
+            //todo types
+            UserApi.resetPassword(id);
 
             modal.close();
 
@@ -137,8 +130,14 @@ const UserPage = () => {
       ''
     );
   };
-  if (loading) return loader.render();
-  if (!user) return <p>Пользователь не найден</p>;
+
+  if (loading) {
+    return loader.render();
+  }
+
+  if (!user) {
+    return <p>Пользователь не найден</p>;
+  }
 
   return (
     <div className="w-full mx-auto p-10 shadow-md scroll-auto">
