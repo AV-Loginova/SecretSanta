@@ -37,7 +37,13 @@ const UserPage = () => {
       try {
         const res = await UserApi.getById(id);
         //todo types
-        setUser(res);
+
+        const userData: UserWithWishlist = {
+          ...res,
+          wishlist: [],
+        };
+
+        setUser(userData);
 
         setFormData({
           name: res.name,
@@ -90,7 +96,7 @@ const UserPage = () => {
             loader.open();
 
             //todo types
-            UserApi.delete(user?.id);
+            UserApi.delete(user ? [user.id] : undefined);
 
             modal.close();
             router.push('/admin/users');
@@ -114,7 +120,7 @@ const UserPage = () => {
           try {
             loader.open();
             //todo types
-            UserApi.resetPassword(id);
+            console.warn('todo');
 
             modal.close();
 

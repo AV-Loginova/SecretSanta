@@ -1,25 +1,20 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { IoSunny, IoMoon } from 'react-icons/io5';
 
 import { useUser } from '@hooks/useUser/useUser';
 
 import { HeaderProfile } from './components/HeaderProfile';
 
-export const Header = () => {
+interface HeaderProps {
+  theme: string;
+  setTheme: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+export const Header = ({ theme, setTheme }: HeaderProps) => {
   const { data: user, isLoading } = useUser();
   const isAdmin = user?.role === 'admin' || user?.role === 'super';
-
-  const [theme, setTheme] = useState('cupcake');
-
-  useEffect(() => {
-    const storedTheme =
-      user?.theme || localStorage.getItem('theme') || 'cupcake';
-    setTheme(storedTheme);
-    document.documentElement.setAttribute('data-theme', storedTheme);
-  }, [user]);
 
   const toggleTheme = async () => {
     const newTheme = theme === 'cupcake' ? 'dracula' : 'cupcake';
@@ -45,7 +40,7 @@ export const Header = () => {
     <header className="navbar z-100 p-0">
       <div className="flex navbar bg-base-100 shadow-sm">
         <div className="flex-1">
-          <Link className="btn btn-ghost text-xl rounded-full" href={'/'}>
+          <Link className="btn btn-ghost text-xl rounded-full" href="/">
             Тайный Санта
           </Link>
         </div>
@@ -54,10 +49,10 @@ export const Header = () => {
           {!isLoading && !user && (
             <ul className="menu menu-horizontal px-1">
               <li>
-                <Link href={'/register'}>Регистрация</Link>
+                <Link href="/register">Регистрация</Link>
               </li>
               <li>
-                <Link href={'/login'}>Войти</Link>
+                <Link href="/login">Войти</Link>
               </li>
             </ul>
           )}
