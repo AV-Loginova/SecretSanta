@@ -82,10 +82,10 @@ const Page = () => {
     setLoading(true);
 
     const payload = {
-      name: name,
-      email: email,
-      password: password,
-      avatar: avatar?.[0] || null,
+      name: name ?? undefined,
+      email,
+      password,
+      avatar: avatar?.[0] || undefined,
     };
 
     try {

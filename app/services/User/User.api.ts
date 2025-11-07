@@ -68,12 +68,6 @@ export const UserApi = {
     });
   },
 
-  resetPassword(id: number) {
-    return request<void>(`/api/admin/users/${id}/reset-password`, {
-      method: 'POST',
-      credentials: 'include',
-    });
-  },
   //todo
   updateByAdmin(id: number, data: Partial<User> & { avatar?: File | null }) {
     const formData = new FormData();

@@ -5,9 +5,11 @@ interface Params {
   userId: string;
 }
 
-export async function GET(req: NextRequest, context: { params: Params }) {
-  const { params } = context;
-
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<Params> }
+) {
+  const params = await context.params;
   const userId = Number(params.userId);
 
   if (isNaN(userId)) {

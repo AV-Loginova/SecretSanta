@@ -36,9 +36,9 @@ const ReceiverPage = () => {
     const fetchReceiver = async () => {
       try {
         loader.open();
-        const data = UserApi.getReceiver();
 
-        //todo types
+        const data = (await UserApi.getReceiver()) as { receiver?: Receiver };
+
         setReceiver(data?.receiver || null);
       } catch (error) {
         console.error('Failed to fetch receiver:', error);

@@ -6,9 +6,21 @@ import path from 'path';
 import { prisma } from '@lib/prisma/prisma';
 import { adminCheck } from '@lib/middleware/adminCheck';
 
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: string;
+  avatarUrl?: string;
+  theme?: string;
+  password?: string;
+}
+
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  context: any
 ) {
   const res = adminCheck(req);
 
@@ -16,7 +28,10 @@ export async function GET(
     return res;
   }
 
-  const userId = Number(params.id);
+  const params = await context.params;
+  const id = params.id;
+  const userId = Number(id);
+
   if (isNaN(userId)) {
     return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
   }
@@ -53,13 +68,19 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  context: any
 ) {
-  // Проверяем, что админ
   const res = adminCheck(req);
-  if (res) return res;
 
-  const userId = Number(params.id);
+  if (res) {
+    return res;
+  }
+
+  const params = await context.params;
+  const id = params.id;
+  const userId = Number(id);
+
   if (isNaN(userId)) {
     return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
   }
@@ -72,11 +93,19 @@ export async function PATCH(
     const password = formData.get('password') as string | null;
     const avatar = formData.get('avatar') as File | null;
 
-    const dataToUpdate = {};
+    const dataToUpdate: Partial<User> = {};
 
-    if (name) dataToUpdate.name = name;
-    if (email) dataToUpdate.email = email;
-    if (role) dataToUpdate.role = role;
+    if (name) {
+      dataToUpdate.name = name;
+    }
+
+    if (email) {
+      dataToUpdate.email = email;
+    }
+
+    if (role) {
+      dataToUpdate.role = role;
+    }
 
     if (password) {
       dataToUpdate.password = await bcrypt.hash(password, 10);
@@ -113,6 +142,7 @@ export async function PATCH(
     return NextResponse.json(updatedUser);
   } catch (err) {
     console.error('Ошибка обновления пользователя:', err);
+
     return NextResponse.json(
       { error: 'Ошибка при обновлении пользователя' },
       { status: 500 }
