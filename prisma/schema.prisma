@@ -15,14 +15,16 @@ model User {
   role      String         @default("user")
   avatarUrl String?
   createdAt DateTime       @default(now())
-
-  wishlist  WishlistItem[]
-
-  giftsGiven    SecretSantaAssignment[] @relation("giver")
-  giftsReceived SecretSantaAssignment[] @relation("receiver")
-
   theme     String         @default("cupcake")
 
+  emailVerified DateTime?  
+
+  wishlist       WishlistItem[]
+
+  giftsGiven     SecretSantaAssignment[] @relation("giver")
+  giftsReceived  SecretSantaAssignment[] @relation("receiver")
+
+  emailTokens    EmailToken[]
 }
 
 model WishlistItem {
@@ -47,3 +49,15 @@ model SecretSantaAssignment {
   receiver User @relation("receiver", fields: [receiverId], references: [id])
 }
 
+model EmailToken {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  tokenHash String
+  type      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tokenHash])
+}

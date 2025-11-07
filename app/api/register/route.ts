@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 import { prisma } from '../../../lib/prisma/prisma';
 
@@ -42,6 +45,21 @@ export async function POST(req: Request) {
         password: hashedPassword,
       },
     });
+
+    try {
+      await resend.emails.send({
+        from: 'hello@earthly-capital-yeti.cloudpub.ru',
+        to: body.email,
+        subject: 'Добро пожаловать в Secret Santa!',
+        html: `
+      <h1>Привет, ${body.name}!</h1>
+      <p>Спасибо за регистрацию на сервисе Secret Santa</p>
+      <p>Мы рады видеть тебя!</p>
+    `,
+      });
+    } catch (err) {
+      console.error('Ошибка отправки письма:', err);
+    }
 
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
